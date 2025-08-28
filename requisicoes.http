@@ -1,0 +1,277 @@
+### Create Contact
+### Create Contact
+POST http://localhost:3333/contacts
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao.silva@email.com",
+  "codigoZip": "12345678",
+  "endereco": "Rua das Flores",
+  "numero": "123",
+  "bairro": "Centro",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "complemento": "Apto 45",
+  "telefones": [
+    {
+      "numero": "11987654321"
+    },
+    {
+      "numero": "1133334444"
+    }
+  ]
+}
+
+### Create Contact - Minimal Required Fields
+POST http://localhost:3333/contacts
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao.silva2@email.com",
+  "codigoZip": "12345678",
+  "endereco": "Rua das Flores",
+  "numero": "123",
+  "bairro": "Centro",
+  "cidade": "São Paulo",
+  "complemento": "Apto 45"
+}
+
+### Create Contact - Test Duplicate Email Error
+POST http://localhost:3333/contacts
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao.silva@email.com",
+  "codigoZip": "12345678",
+  "endereco": "Rua das Flores",
+  "numero": "123",
+  "bairro": "Centro",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "complemento": "Apto 45"
+}
+
+### Create Contact - Test Validation Error (Missing Required Fields)
+POST http://localhost:3333/contacts
+Content-Type: application/json
+
+{
+  "nome": "Ana",
+  "codigoZip": "22222222"
+}
+
+
+
+
+
+
+### List Contacts
+### List All Contacts
+GET http://localhost:3333/contacts
+
+### Search Contacts - By Name
+GET http://localhost:3333/contacts?search=João
+
+### Search Contacts - By Email
+GET http://localhost:3333/contacts?search=AnaClara.Barros@live.com
+
+### Search Contacts - By Address
+GET http://localhost:3333/contacts?search=Flores
+
+### Search Contacts - By Phone Number
+GET http://localhost:3333/contacts?search=11987
+
+### Search Contacts - By City
+GET http://localhost:3333/contacts?search=São Paulo
+
+### Search Contacts - By ZIP Code
+GET http://localhost:3333/contacts?search=12345
+
+### Search Contacts - By State
+GET http://localhost:3333/contacts?search=SP
+
+### Search Contacts - By Neighborhood
+GET http://localhost:3333/contacts?search=Centro
+
+### Search Contacts - Filter by Inactive Status
+GET http://localhost:3333/contacts?ativo=false
+
+### Search Contacts - Combined Search and Filter
+GET http://localhost:3333/contacts?search=João&ativo=true
+
+### Search Contacts - With Pagination
+GET http://localhost:3333/contacts?search=São&page=1&limit=5
+
+### Search Contacts - Second Page
+GET http://localhost:3333/contacts?limit=2&page=2
+
+
+
+
+
+
+### Get Specific Contact
+### Get Specific Contact with Weather Info
+GET http://localhost:3333/contacts/ae1a0d8c-4a19-4c5b-a757-d0ccad2142be
+
+### Get Contact - Example with UUID (replace with actual contact ID)
+GET http://localhost:3333/contacts/123e4567-e89b-12d3-a456-426614174000
+
+### Get Contact - Invalid UUID Format
+GET http://localhost:3333/contacts/invalid-uuid
+
+### Get Contact - Non-existent Contact
+GET http://localhost:3333/contacts/00000000-0000-0000-0000-000000000000
+
+
+
+
+
+
+### Delete Contact
+### Delete Contact (Soft Delete)
+DELETE http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+
+### Delete Contact - Example with UUID (replace with actual contact ID)
+DELETE http://localhost:3333/contacts/123e4567-e89b-12d3-a456-426614174000
+
+### Delete Contact - Invalid UUID Format
+DELETE http://localhost:3333/contacts/invalid-uuid
+
+### Delete Contact - Non-existent Contact
+DELETE http://localhost:3333/contacts/00000000-0000-0000-0000-000000000000
+
+### Delete Contact - Already Inactive (try deleting the same contact twice)
+DELETE http://localhost:3333/contacts/ae1a0d8c-4a19-4c5b-a757-d0ccad2142be
+
+
+
+
+### Update Contact
+### Update Contact - Full Update
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "nome": "João Silva Atualizado a",
+  "email": "joao.silva.novo@email.com",
+  "codigoZip": "87654321",
+  "endereco": "Av. Paulista Atualizada",
+  "numero": "1000",
+  "bairro": "Bela Vista",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "complemento": "Torre A, Sala 1001",
+  "ativo": true,
+  "addPhoneNumbers": [
+    {
+      "numero": "11998877665"
+    },
+    {
+      "numero": "1133445566"
+    }
+  ]
+}
+
+### Update Contact - Partial Update (only name and email)
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "nome": "João Silva Parcial",
+  "email": "joao.parcial@email.com"
+}
+
+### Update Contact - Add Phone Numbers Only
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "addPhoneNumbers": [
+    {
+      "numero": "11999888777"
+    },
+    {
+      "numero": "21987654321"
+    }
+  ]
+}
+
+### Update Contact - Delete Specific Phone Numbers (replace with actual phone IDs)
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "deletePhoneNumbers": [
+    "36f4c23e-c6bd-404f-b025-463fba86da06"
+  ]
+}
+
+### Update Contact - Add and Delete Phone Numbers Simultaneously
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "addPhoneNumbers": [
+    {
+      "numero": "11555666777"
+    }
+  ],
+  "deletePhoneNumbers": [
+    "9c667e57-91b9-4e9d-bbf9-48f2784f720a"
+  ]
+}
+
+### Update Contact - Update Address Only
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "endereco": "Nova Rua das Palmeiras",
+  "numero": "456",
+  "complemento": "Casa 2"
+}
+
+### Update Contact - Invalid UUID Format
+PUT http://localhost:3333/contacts/invalid-uuid
+Content-Type: application/json
+
+{
+  "nome": "Test"
+}
+
+### Update Contact - Non-existent Contact
+PUT http://localhost:3333/contacts/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "nome": "Test"
+}
+
+### Update Contact - Duplicate Email Error
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "email": "AnaClara.Barros@live.com"
+}
+
+### Update Contact - Invalid Data
+PUT http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+Content-Type: application/json
+
+{
+  "nome": "A",
+  "email": "invalid-email",
+  "addPhoneNumbers": [
+    {
+      "numero": "123"
+    }
+  ],
+  "deletePhoneNumbers": [
+    "invalid-uuid"
+  ]
+}
