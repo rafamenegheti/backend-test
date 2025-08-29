@@ -127,7 +127,7 @@ Renomeie o arquivo **.env.example** para somente **.env**:
 **.env** (testes):
 
 ```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/desafio_test
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/desafio
 NODE_ENV=test
 ```
 
