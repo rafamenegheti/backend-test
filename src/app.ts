@@ -7,11 +7,7 @@ import {
   jsonSchemaTransform,
 } from "fastify-type-provider-zod";
 import scalarAPIReference from "@scalar/fastify-api-reference";
-import { createContactRoute } from "./routes/contacts/createContact.ts";
-import { listContactsRoute } from "./routes/contacts/listContacts.ts";
-import { listOneContactRoute } from "./routes/contacts/listOneContact.ts";
-import { deleteContactRoute } from "./routes/contacts/deleteContact.ts";
-import { updateContactRoute } from "./routes/contacts/updateContact.ts";
+import { registerRoutes } from "./routes/index.ts";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 
 const server = fastify({
@@ -49,10 +45,6 @@ if (process.env.NODE_ENV === "development") {
 server.setSerializerCompiler(serializerCompiler);
 server.setValidatorCompiler(validatorCompiler);
 
-server.register(createContactRoute);
-server.register(listContactsRoute);
-server.register(listOneContactRoute);
-server.register(deleteContactRoute);
-server.register(updateContactRoute);
+server.register(registerRoutes);
 
 export { server };

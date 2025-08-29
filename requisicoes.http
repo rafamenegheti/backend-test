@@ -115,7 +115,7 @@ GET http://localhost:3333/contacts?limit=2&page=2
 
 ### Get Specific Contact
 ### Get Specific Contact with Weather Info
-GET http://localhost:3333/contacts/ae1a0d8c-4a19-4c5b-a757-d0ccad2142be
+GET http://localhost:3333/contacts/3dab8dc0-2cee-4b55-bcc8-1dd0ded44ff6
 
 ### Get Contact - Example with UUID (replace with actual contact ID)
 GET http://localhost:3333/contacts/123e4567-e89b-12d3-a456-426614174000
@@ -133,7 +133,7 @@ GET http://localhost:3333/contacts/00000000-0000-0000-0000-000000000000
 
 ### Delete Contact
 ### Delete Contact (Soft Delete)
-DELETE http://localhost:3333/contacts/698f3b8e-41af-4fad-8c00-8d38ca56d0e9
+DELETE http://localhost:3333/contacts/3dab8dc0-2cee-4b55-bcc8-1dd0ded44ff6
 
 ### Delete Contact - Example with UUID (replace with actual contact ID)
 DELETE http://localhost:3333/contacts/123e4567-e89b-12d3-a456-426614174000
