@@ -6,28 +6,35 @@ Uma API REST robusta para gerenciamento de contatos, desenvolvida com Node.js, T
 
 ### Stack Principal
 
-- **Node.js 20+** com TypeScript nativo (`--experimental-strip-types`)
+- **Node.js 20+** com TypeScript via tsx (dev)
 - **Fastify** - Framework web de alta performance
 - **PostgreSQL** - Banco de dados relacional
 - **Drizzle ORM** - Type-safe SQL query builder
 - **Zod** - Validação de schemas TypeScript-first
-- **Vitest** - Framework de testes moderno
+- **Vitest** - Framework de testes modernoZ=
 
-### Arquitetura Adotada
+### Arquitetura Adotada (MVC + SOLID)
 
-#### 1. **Arquitetura em Camadas (Layered Architecture)**
+#### 1. **Estrutura de pastas (MVC + DI)**
 
 ```
 src/
-├── app.ts              # Configuração principal do servidor
-├── server.ts           # Entry point da aplicação
-├── database/           # Camada de dados
-│   ├── client.ts       # Cliente do banco de dados
-│   ├── schema.ts       # Definição das tabelas
-│   └── seed.ts         # População inicial do banco
-├── routes/             # Camada de roteamento
-│   └── contacts/       # Módulo de contatos
-└── test/               # Testes automatizados
+├── app.ts                      # Configuração principal do Fastify e providers
+├── server.ts                   # Entry point da aplicação
+├── controllers/                # Controllers (Camada C do MVC)
+│   └── contactController.ts    # Regras HTTP, validação, status codes
+├── services/                   # Services (Regra de negócio)
+│   ├── contactService.ts       # Orquestra casos de uso
+│   └── weatherService.ts       # Integração externa (clima)
+├── repositories/               # Repositories (Acesso a dados - Model)
+│   └── contactRepository.ts    # Drizzle ORM
+├── routes/
+│   └── index.ts                # Container de DI (wiring)
+├── database/
+│   ├── client.ts
+│   ├── schema.ts
+│   └── seed.ts
+└── test/
 ```
 
 #### 2. **Domain-Driven Design (DDD) Simplificado**
@@ -151,7 +158,7 @@ npm run db:generate
 npm run db:migrate
 ```
 
-É importante iniciar uma nova instância da imagem, pois pode ocorrer erros na hora de rodar as migrations caso o banco de dados ja exista antes
+É importante iniciar uma nova instância da imagem, pois pode ocorrer erros na hora de rodar as migrations caso o banco de dados já exista antes
 
 ### 6. (Opcional) Popule o Banco com Dados de Teste
 
@@ -180,7 +187,7 @@ npm run db:studio
 
 Acesse a documentação em: `http://localhost:3333/docs`
 
-Voce pode mudar a UI para o Scalar se preferir, é só comentar as linhas 40, 41 e 42 do arquivo src/app e descomentar as linhas 44, 45 e 46.
+Voce pode mudar a UI para o Scalar se preferir, é só comentar as linhas 36, 37 e 38 do arquivo src/app e descomentar as linhas 40, 41 e 42.
 
 ### Endpoints Principais
 
