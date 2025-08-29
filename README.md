@@ -122,9 +122,7 @@ npm install
 
 ### 3. Configure as Variáveis de Ambiente
 
-Crie os arquivos de configuração:
-
-Renomeie o arquivo **.env.test** para somente **.env**
+Renomeie o arquivo **.env.test** para somente **.env**:
 
 **.env** (testes):
 
