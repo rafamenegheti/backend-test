@@ -107,7 +107,7 @@ Voce pode mudar a UI para o Scalar se preferir, é só comentar as linhas 36, 37
 
 ### Arquivo de Requisições HTTP
 
-O projeto inclui um arquivo `requisicoes.http`(Funciona como um Postman) com exemplos completos de todas as operações da API, incluindo casos de teste para validações e tratamento de erros.
+O projeto inclui um arquivo `requisicoes.http`(Funciona como um Postman, você precissa ter a extensão "REST Client" do VS Code) com exemplos completos de todas as operações da API, incluindo casos de teste para validações e tratamento de erros.
 
 ## 🧪 Testes
 
