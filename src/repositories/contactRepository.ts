@@ -165,10 +165,12 @@ export class DrizzleContactRepository implements ContactRepository {
     const baseCountQuery = db
       .select({ count: sql`count(*)`.mapWith(Number) })
       .from(contatos);
+
     const countQuery =
       conditions.length > 0
         ? baseCountQuery.where(and(...conditions))
         : baseCountQuery;
+
     const [{ count: totalItems }] = await countQuery;
 
     const items = await query
@@ -195,10 +197,13 @@ export class DrizzleContactRepository implements ContactRepository {
         .select({ id: telefones.id })
         .from(telefones)
         .where(eq(telefones.contatoId, id));
+
       const validPhoneIds = ownership.map((p) => p.id);
+
       const toDelete = deletePhoneNumbers.filter((pid) =>
         validPhoneIds.includes(pid)
       );
+
       for (const phoneId of toDelete) {
         await db.delete(telefones).where(eq(telefones.id, phoneId));
       }
@@ -221,6 +226,7 @@ export class DrizzleContactRepository implements ContactRepository {
       .set({ ativo: false, updatedAt: new Date() })
       .where(eq(contatos.id, id))
       .returning({ id: contatos.id });
+
     return updated.length > 0;
   }
 
@@ -230,6 +236,7 @@ export class DrizzleContactRepository implements ContactRepository {
       .from(contatos)
       .where(eq(contatos.email, email))
       .limit(1);
+
     return rows.length > 0;
   }
 }

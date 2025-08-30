@@ -23,6 +23,7 @@ export function buildListContacts(
       async (request, reply) => {
         try {
           const response = await service.list(request.query as any);
+
           return reply.status(200).send(response);
         } catch (error: any) {
           if (error.code) {
@@ -31,6 +32,7 @@ export function buildListContacts(
               message: "Erro ao consultar contatos",
             });
           }
+
           return reply.status(500).send({
             error: "INTERNAL_SERVER_ERROR",
             message: "Erro interno do servidor. Tente novamente mais tarde.",

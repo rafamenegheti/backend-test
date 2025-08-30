@@ -52,12 +52,15 @@ export function buildUpdateContact(
       async (request, reply) => {
         try {
           const { id } = request.params as any;
+
           const result = await service.update(id, request.body as any);
+
           if ("error" in result) {
             if (result.error === "DUPLICATE_EMAIL")
               return reply.status(409).send(result);
             return reply.status(404).send(result);
           }
+
           return reply.status(200).send({
             success: true,
             message: "Contato atualizado com sucesso",
@@ -70,18 +73,21 @@ export function buildUpdateContact(
               message: "Este email já está cadastrado",
             });
           }
+
           if (error.code === "23503") {
             return reply.status(400).send({
               error: "INVALID_REFERENCE",
               message: "Referência inválida nos dados fornecidos",
             });
           }
+
           if (error.code) {
             return reply.status(500).send({
               error: "DATABASE_ERROR",
               message: "Erro ao atualizar contato",
             });
           }
+
           return reply.status(500).send({
             error: "INTERNAL_SERVER_ERROR",
             message: "Erro interno do servidor. Tente novamente mais tarde.",

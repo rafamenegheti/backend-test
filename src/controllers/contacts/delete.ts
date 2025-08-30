@@ -20,12 +20,15 @@ export function buildDeleteContact(
       async (request, reply) => {
         try {
           const { id } = request.params as any;
+
           const result = await service.softDelete(id);
+
           if ("error" in result) {
             return reply
               .status(result.error === "CONTACT_NOT_FOUND" ? 404 : 404)
               .send(result);
           }
+
           return reply.status(200).send({
             success: true,
             message: "Contato desativado com sucesso",
@@ -38,6 +41,7 @@ export function buildDeleteContact(
               message: "Erro ao processar solicitação de exclusão",
             });
           }
+
           return reply.status(500).send({
             error: "INTERNAL_SERVER_ERROR",
             message: "Erro interno do servidor. Tente novamente mais tarde.",

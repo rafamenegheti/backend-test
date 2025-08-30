@@ -20,10 +20,13 @@ export function buildGetOneContact(
       async (request, reply) => {
         try {
           const { id } = request.params as any;
+
           const result = await service.getWithWeather(id);
+
           if ("error" in result) {
             return reply.status(404).send(result);
           }
+
           return reply.status(200).send(result);
         } catch (error: any) {
           if (error.code) {
@@ -32,6 +35,7 @@ export function buildGetOneContact(
               message: "Erro ao consultar contato",
             });
           }
+
           return reply.status(500).send({
             error: "INTERNAL_SERVER_ERROR",
             message: "Erro interno do servidor. Tente novamente mais tarde.",

@@ -47,6 +47,7 @@ export function buildCreateContact(
       async (request, reply) => {
         try {
           const result = await service.create(request.body as any);
+
           return reply.status(201).send({ contactId: result.id });
         } catch (error: any) {
           if (

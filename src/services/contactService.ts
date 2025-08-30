@@ -49,6 +49,7 @@ export class ContactService {
     });
 
     const contactIds = items.map((c) => c.id);
+
     const phones =
       contactIds.length > 0
         ? await db
@@ -69,7 +70,9 @@ export class ContactService {
     const phonesByContact = phones.reduce((acc, phone) => {
       if (!acc[phone.contatoId])
         acc[phone.contatoId] = [] as Array<{ id: string; numero: string }>;
+
       acc[phone.contatoId].push({ id: phone.id, numero: phone.numero });
+
       return acc;
     }, {} as Record<string, Array<{ id: string; numero: string }>>);
 
@@ -169,8 +172,10 @@ export class ContactService {
     | { success: true; contactId: string }
   > {
     const existing = await this.repository.findById(id);
+
     if (!existing)
       return { error: "CONTACT_NOT_FOUND", message: "Contato não encontrado" };
+
     if (!existing.ativo)
       return {
         error: "CONTACT_ALREADY_INACTIVE",
@@ -180,6 +185,7 @@ export class ContactService {
     const ok = await this.repository.softDelete(id);
     if (!ok)
       return { error: "CONTACT_NOT_FOUND", message: "Contato não encontrado" };
+
     return { success: true, contactId: id };
   }
 }
