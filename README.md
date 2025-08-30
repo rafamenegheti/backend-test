@@ -2,9 +2,82 @@
 
 > Nota: parte dos testes e dos comentários presentes neste projeto foram gerados com auxílio de IA.
 
-[Ir diretamente para "Como Rodar o Projeto Localmente"](#como-rodar-o-projeto-localmente)
-
 Uma API REST robusta para gerenciamento de contatos, desenvolvida com Node.js, TypeScript, Fastify e PostgreSQL. O sistema oferece funcionalidades completas de CRUD (Create, Read, Update, Delete) para contatos e seus telefones associados, incluindo busca avançada e integração com API de clima.
+
+## 🚀 Como Rodar o Projeto Localmente
+
+### Pré-requisitos
+
+- **Node.js 20+** (recomendado usar via nvm)
+- **Docker e Docker Compose**
+- **Git**
+
+### 1. Clone o Repositório
+
+```bash
+git clone https://github.com/rafamenegheti/backend-test.git
+cd backend-test
+```
+
+### 2. Instale as Dependências
+
+```bash
+npm install
+```
+
+### 3. Configure as Variáveis de Ambiente
+
+Renomeie o arquivo **.env.example** para somente **.env**:
+
+**.env** (testes):
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/desafio
+NODE_ENV=test
+```
+
+### 4. Inicie o Banco de Dados
+
+```bash
+# Inicia PostgreSQL via Docker
+docker-compose up -d
+
+# Aguarde alguns segundos para o banco inicializar
+# Se a imagem não subir de primeira, rode o comando novamente
+```
+
+### 5. Execute as Migrações
+
+```bash
+# Gera as migrações
+npm run db:generate
+
+# Aplica as migrações
+npm run db:migrate
+```
+
+É importante iniciar uma nova instância da imagem, pois pode ocorrer erros na hora de rodar as migrations caso o banco de dados já exista antes
+
+### 6. (Opcional) Popule o Banco com Dados de Teste
+
+```bash
+npm run db:seed
+```
+
+### 7. Inicie o Servidor de Desenvolvimento
+
+```bash
+npm run dev
+```
+
+A API estará disponível em: `http://localhost:3333`
+
+### Banco de Dados
+
+```bash
+# Interface visual do banco (Drizzle Studio)
+npm run db:studio
+```
 
 ## 🏗️ Arquitetura e Decisões Técnicas
 
@@ -114,81 +187,6 @@ telefones (
   numero TEXT NOT NULL,
   contato_id UUID REFERENCES contatos(id) ON DELETE CASCADE
 )
-```
-
-## 🚀 Como Rodar o Projeto Localmente
-
-### Pré-requisitos
-
-- **Node.js 20+** (recomendado usar via nvm)
-- **Docker e Docker Compose**
-- **Git**
-
-### 1. Clone o Repositório
-
-```bash
-git clone https://github.com/rafamenegheti/backend-test.git
-cd backend-test
-```
-
-### 2. Instale as Dependências
-
-```bash
-npm install
-```
-
-### 3. Configure as Variáveis de Ambiente
-
-Renomeie o arquivo **.env.example** para somente **.env**:
-
-**.env** (testes):
-
-```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/desafio
-NODE_ENV=test
-```
-
-### 4. Inicie o Banco de Dados
-
-```bash
-# Inicia PostgreSQL via Docker
-docker-compose up -d
-
-# Aguarde alguns segundos para o banco inicializar
-# Se a imagem não subir de primeira, rode o comando novamente
-```
-
-### 5. Execute as Migrações
-
-```bash
-# Gera as migrações
-npm run db:generate
-
-# Aplica as migrações
-npm run db:migrate
-```
-
-É importante iniciar uma nova instância da imagem, pois pode ocorrer erros na hora de rodar as migrations caso o banco de dados já exista antes
-
-### 6. (Opcional) Popule o Banco com Dados de Teste
-
-```bash
-npm run db:seed
-```
-
-### 7. Inicie o Servidor de Desenvolvimento
-
-```bash
-npm run dev
-```
-
-A API estará disponível em: `http://localhost:3333`
-
-### Banco de Dados
-
-```bash
-# Interface visual do banco (Drizzle Studio)
-npm run db:studio
 ```
 
 ## 📚 Documentação da API
