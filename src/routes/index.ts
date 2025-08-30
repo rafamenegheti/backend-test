@@ -1,5 +1,5 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import { buildContactController } from "../controllers/contactController.ts";
+import { buildContactsController } from "../controllers/contacts/index.ts";
 import { ContactService } from "../services/contactService.ts";
 import { DrizzleContactRepository } from "../repositories/contactRepository.ts";
 import { HgBrasilWeatherService } from "../services/weatherService.ts";
@@ -9,5 +9,5 @@ export const registerRoutes: FastifyPluginAsyncZod = async (server) => {
   const weather = new HgBrasilWeatherService();
   const service = new ContactService(repository, weather);
 
-  await server.register(buildContactController(service));
+  await server.register(buildContactsController(service));
 };
