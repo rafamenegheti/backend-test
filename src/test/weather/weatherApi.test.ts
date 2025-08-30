@@ -64,7 +64,7 @@ describe("Weather API Integration", () => {
       // Verify the API was called with correct parameters
       expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.hgbrasil.com/weather?format=json-cors&city_name=S%C3%A3o%20Paulo"
+        "https://api.hgbrasil.com/weather?key=SUA-CHAVE&city_name=S%C3%A3o%20Paulo"
       );
 
       // Verify the response contains weather data
@@ -120,7 +120,7 @@ describe("Weather API Integration", () => {
 
       // Verify the API was called with properly encoded city name
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.hgbrasil.com/weather?format=json-cors&city_name=S%C3%A3o%20Jos%C3%A9%20dos%20Campos"
+        "https://api.hgbrasil.com/weather?key=SUA-CHAVE&city_name=S%C3%A3o%20Jos%C3%A9%20dos%20Campos"
       );
 
       expect(response.body.contact.weather).toMatchObject({
@@ -146,7 +146,7 @@ describe("Weather API Integration", () => {
         .expect(200);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.hgbrasil.com/weather?format=json-cors&city_name=Invalid%20City"
+        "https://api.hgbrasil.com/weather?key=SUA-CHAVE&city_name=Invalid%20City"
       );
 
       expect(response.body.contact.weather).toMatchObject({

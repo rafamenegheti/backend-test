@@ -57,7 +57,7 @@ export class HgBrasilWeatherService implements WeatherService {
   ): Promise<WeatherSuggestion | WeatherError> {
     try {
       const response = await fetch(
-        `https://api.hgbrasil.com/weather?format=json-cors&city_name=${encodeURIComponent(
+        `https://api.hgbrasil.com/weather?key=SUA-CHAVE&city_name=${encodeURIComponent(
           city
         )}`
       );
