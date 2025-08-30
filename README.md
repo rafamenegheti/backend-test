@@ -46,6 +46,12 @@ docker-compose up -d
 # Se a imagem não subir de primeira, rode o comando novamente
 ```
 
+Para verificar se o container está em execução, rode:
+
+```bash
+docker ps
+```
+
 ### 5. Execute as Migrações
 
 ```bash
@@ -101,7 +107,7 @@ Voce pode mudar a UI para o Scalar se preferir, é só comentar as linhas 36, 37
 
 ### Arquivo de Requisições HTTP
 
-O projeto inclui um arquivo `requisicoes.http` com exemplos completos de todas as operações da API, incluindo casos de teste para validações e tratamento de erros.
+O projeto inclui um arquivo `requisicoes.http`(Funciona como um Postman) com exemplos completos de todas as operações da API, incluindo casos de teste para validações e tratamento de erros.
 
 ## 🧪 Testes
 
