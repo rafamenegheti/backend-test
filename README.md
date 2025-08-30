@@ -2,6 +2,8 @@
 
 > Nota: parte dos testes e dos comentários presentes neste projeto foram gerados com auxílio de IA.
 
+[Ir diretamente para "Como Rodar o Projeto Localmente"](#como-rodar-o-projeto-localmente)
+
 Uma API REST robusta para gerenciamento de contatos, desenvolvida com Node.js, TypeScript, Fastify e PostgreSQL. O sistema oferece funcionalidades completas de CRUD (Create, Read, Update, Delete) para contatos e seus telefones associados, incluindo busca avançada e integração com API de clima.
 
 ## 🏗️ Arquitetura e Decisões Técnicas
@@ -13,7 +15,7 @@ Uma API REST robusta para gerenciamento de contatos, desenvolvida com Node.js, T
 - **PostgreSQL** - Banco de dados relacional
 - **Drizzle ORM** - Type-safe SQL query builder
 - **Zod** - Validação de schemas TypeScript-first
-- **Vitest** - Framework de testes modernoZ=
+- **Vitest** - Framework de testes moderno
 
 ### Arquitetura Adotada (MVC + SOLID)
 
@@ -242,7 +244,7 @@ npm run test:unit
 
 ### Docker Support
 
-O projeto inclui `docker-compose.yml` para facilitar o desenvolvimento local. Para uso em produção, pode ser facilmente dockerizado:
+O projeto inclui `docker-compose.yml` para facilitar o desenvolvimento local. Para uso em produção, pode ser facilmente dockerizado
 
 ## 📝 Funcionalidades Implementadas
 
