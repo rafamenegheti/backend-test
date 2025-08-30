@@ -9,9 +9,10 @@ import {
 import { testDb } from "../../setup";
 import { contatos, telefones } from "../../../database/schema";
 import { eq } from "drizzle-orm";
+import type { FastifyInstance } from "fastify";
 
 describe("PUT /contacts/:id", () => {
-  let app: any;
+  let app: FastifyInstance;
 
   beforeEach(async () => {
     await clearDatabase();

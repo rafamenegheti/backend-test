@@ -19,7 +19,7 @@ export function buildGetOneContact(
       },
       async (request, reply) => {
         try {
-          const { id } = request.params as any;
+          const { id } = request.params;
 
           const result = await service.getWithWeather(id);
 

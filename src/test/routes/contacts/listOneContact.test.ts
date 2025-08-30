@@ -7,12 +7,13 @@ import {
   clearDatabase,
   mockWeatherAPI,
 } from "../../utils";
+import type { FastifyInstance } from "fastify";
 
 // Mock fetch globally
 global.fetch = vi.fn();
 
 describe("GET /contacts/:id", () => {
-  let app: any;
+  let app: FastifyInstance;
 
   beforeEach(async () => {
     await clearDatabase();
@@ -63,9 +64,13 @@ describe("GET /contacts/:id", () => {
       },
     });
 
-    // Verify weather API was called with correct city
-    expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining(`city_name=${encodeURIComponent("São Paulo")}`)
+    // Verify weather API was called with correct city (case-insensitive)
+    const calledUrl = (fetch as unknown as { mock: { calls: any[][] } }).mock
+      .calls[0][0] as string;
+    const cityParam = new URL(calledUrl).searchParams.get("city_name");
+    expect(cityParam).toBeTruthy();
+    expect(decodeURIComponent(cityParam as string).toLowerCase()).toContain(
+      "são paulo"
     );
   });
 

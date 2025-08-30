@@ -13,7 +13,10 @@ export interface WeatherError {
 }
 
 export interface WeatherService {
-  getWeatherData(city: string): Promise<WeatherSuggestion | WeatherError>;
+  getWeatherData(
+    city: string,
+    state: string
+  ): Promise<WeatherSuggestion | WeatherError>;
 }
 
 export class HgBrasilWeatherService implements WeatherService {
@@ -53,13 +56,14 @@ export class HgBrasilWeatherService implements WeatherService {
   }
 
   async getWeatherData(
-    city: string
+    city: string,
+    state: string
   ): Promise<WeatherSuggestion | WeatherError> {
     try {
       const response = await fetch(
         `https://api.hgbrasil.com/weather?key=SUA-CHAVE&city_name=${encodeURIComponent(
-          city
-        )}`
+          city.toLowerCase()
+        )}, ${encodeURI(state.toLowerCase())}`
       );
 
       if (!response.ok) {
@@ -69,7 +73,18 @@ export class HgBrasilWeatherService implements WeatherService {
         };
       }
 
-      const data: any = await response.json();
+      interface HgBrasilWeatherApiResponse {
+        valid_key?: boolean;
+        results?: {
+          temp: number;
+          description: string;
+          condition_code: string;
+          currently: string;
+          city: string;
+        };
+      }
+
+      const data = (await response.json()) as HgBrasilWeatherApiResponse;
 
       if (!data.valid_key && !data.results) {
         return {
@@ -78,16 +93,16 @@ export class HgBrasilWeatherService implements WeatherService {
         };
       }
 
-      const temp: number = data.results.temp;
-      const condition: string = data.results.description;
+      const temp: number = data.results!.temp;
+      const condition: string = data.results!.description;
       const suggestion = this.generateWeatherSuggestion(temp, condition);
 
       return {
         temp,
-        condition_code: data.results.condition_code,
+        condition_code: data.results!.condition_code,
         condition,
-        currently: data.results.currently,
-        city: data.results.city,
+        currently: data.results!.currently,
+        city: data.results!.city,
         suggestion,
       };
     } catch (error) {

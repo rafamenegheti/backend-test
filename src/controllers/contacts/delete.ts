@@ -19,7 +19,7 @@ export function buildDeleteContact(
       },
       async (request, reply) => {
         try {
-          const { id } = request.params as any;
+          const { id } = request.params;
 
           const result = await service.softDelete(id);
 

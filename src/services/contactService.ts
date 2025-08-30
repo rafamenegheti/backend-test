@@ -2,11 +2,36 @@ import {
   ContactRepository,
   CreateContactInput,
   UpdateContactInput,
+  type ContactRow,
 } from "../repositories/contactRepository.ts";
 import { WeatherService } from "./weatherService.ts";
 import { db } from "../database/client.ts";
 import { telefones } from "../database/schema.ts";
 import { sql } from "drizzle-orm";
+
+export type PhoneSummary = { id: string; numero: string };
+
+export type ContactListItem = Omit<ContactRow, "createdAt" | "updatedAt"> & {
+  createdAt: string;
+  updatedAt: string;
+  telefones: PhoneSummary[];
+};
+
+export type ContactWithWeather = ContactListItem & {
+  weather:
+    | {
+        error: string;
+        message: string;
+      }
+    | {
+        temp: number;
+        condition: string;
+        currently: string;
+        city: string;
+        suggestion: string;
+        condition_code: string;
+      };
+};
 
 export class ContactService {
   constructor(
@@ -24,7 +49,7 @@ export class ContactService {
     page?: number;
     limit?: number;
   }): Promise<{
-    contacts: any[];
+    contacts: ContactListItem[];
     pagination: {
       currentPage: number;
       totalPages: number;
@@ -76,7 +101,7 @@ export class ContactService {
       return acc;
     }, {} as Record<string, Array<{ id: string; numero: string }>>);
 
-    const contacts = items.map((contact) => ({
+    const contacts: ContactListItem[] = items.map((contact) => ({
       ...contact,
       createdAt: contact.createdAt.toISOString(),
       updatedAt: contact.updatedAt.toISOString(),
@@ -100,7 +125,7 @@ export class ContactService {
   async getWithWeather(id: string): Promise<
     | { error: "CONTACT_NOT_FOUND"; message: string }
     | {
-        contact: any;
+        contact: ContactWithWeather;
       }
   > {
     const contact = await this.repository.findById(id);
@@ -113,9 +138,12 @@ export class ContactService {
       .from(telefones)
       .where(sql`${telefones.contatoId} = ${id}`);
 
-    const weather = await this.weatherService.getWeatherData(contact.cidade);
+    const weather = await this.weatherService.getWeatherData(
+      contact.cidade,
+      contact.estado
+    );
 
-    const formatted = {
+    const formatted: ContactWithWeather = {
       ...contact,
       createdAt: contact.createdAt.toISOString(),
       updatedAt: contact.updatedAt.toISOString(),
@@ -129,6 +157,7 @@ export class ContactService {
               currently: weather.currently,
               city: weather.city,
               suggestion: weather.suggestion,
+              condition_code: weather.condition_code,
             },
     };
 

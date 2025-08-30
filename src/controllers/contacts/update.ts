@@ -51,9 +51,9 @@ export function buildUpdateContact(
       },
       async (request, reply) => {
         try {
-          const { id } = request.params as any;
+          const { id } = request.params;
 
-          const result = await service.update(id, request.body as any);
+          const result = await service.update(id, request.body);
 
           if ("error" in result) {
             if (result.error === "DUPLICATE_EMAIL")

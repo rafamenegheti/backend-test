@@ -2,42 +2,27 @@ import { db } from "../database/client.ts";
 import { contatos, telefones } from "../database/schema.ts";
 import { and, eq, ilike, or, sql, SQL } from "drizzle-orm";
 
-export interface CreateContactInput {
-  nome: string;
-  email: string;
-  codigoZip: string;
-  endereco: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-  complemento?: string | null;
-  telefones?: Array<{ numero: string }>;
-}
+export type ContactRow = typeof contatos.$inferSelect;
+type ContactInsert = typeof contatos.$inferInsert;
 
-export interface UpdateContactInput {
-  nome?: string;
-  email?: string;
-  codigoZip?: string;
-  endereco?: string;
-  numero?: string;
-  bairro?: string;
-  cidade?: string;
-  estado?: string;
-  complemento?: string | null;
+export type CreateContactInput = ContactInsert & {
+  telefones?: Array<{ numero: string }>;
+};
+
+export type UpdateContactInput = Partial<ContactInsert> & {
   addPhoneNumbers?: Array<{ numero: string }>;
   deletePhoneNumbers?: string[];
-}
+};
 
 export interface ContactRepository {
   create(input: CreateContactInput): Promise<{ id: string }>;
-  findById(id: string): Promise<any | null>;
+  findById(id: string): Promise<ContactRow | null>;
   list(params: {
     search?: string;
     ativo?: boolean;
     limit: number;
     offset: number;
-  }): Promise<{ items: any[]; totalItems: number }>;
+  }): Promise<{ items: ContactRow[]; totalItems: number }>;
   update(id: string, input: UpdateContactInput): Promise<boolean>;
   softDelete(id: string): Promise<boolean>;
   existsByEmail(email: string): Promise<boolean>;
@@ -66,7 +51,7 @@ export class DrizzleContactRepository implements ContactRepository {
     return { id: newContact.id };
   }
 
-  async findById(id: string): Promise<any | null> {
+  async findById(id: string): Promise<ContactRow | null> {
     const rows = await db
       .select({
         id: contatos.id,
@@ -96,7 +81,7 @@ export class DrizzleContactRepository implements ContactRepository {
     ativo?: boolean;
     limit: number;
     offset: number;
-  }): Promise<{ items: any[]; totalItems: number }> {
+  }): Promise<{ items: ContactRow[]; totalItems: number }> {
     const { search, ativo, limit, offset } = params;
     const conditions: SQL<unknown>[] = [];
 

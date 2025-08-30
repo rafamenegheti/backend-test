@@ -22,7 +22,7 @@ export function buildListContacts(
       },
       async (request, reply) => {
         try {
-          const response = await service.list(request.query as any);
+          const response = await service.list(request.query);
 
           return reply.status(200).send(response);
         } catch (error: any) {

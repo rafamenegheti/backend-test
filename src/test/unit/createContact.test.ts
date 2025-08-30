@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import supertest from "supertest";
 import { server } from "../../app";
+import type { FastifyInstance } from "fastify";
 
 // Mock fetch for weather API
 global.fetch = vi.fn();
@@ -39,7 +40,7 @@ vi.mock("../../database/client.ts", () => ({
 }));
 
 describe("POST /contacts - Unit Tests", () => {
-  let app: any;
+  let app: FastifyInstance;
 
   beforeEach(async () => {
     vi.clearAllMocks();

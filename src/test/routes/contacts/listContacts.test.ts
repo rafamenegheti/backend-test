@@ -6,9 +6,10 @@ import {
   createTestPhone,
   clearDatabase,
 } from "../../utils";
+import type { FastifyInstance } from "fastify";
 
 describe("GET /contacts", () => {
-  let app: any;
+  let app: FastifyInstance;
 
   beforeEach(async () => {
     await clearDatabase();
@@ -92,7 +93,9 @@ describe("GET /contacts", () => {
 
     // Should not include inactive contact
     expect(
-      response.body.contacts.find((c: any) => c.id === inactiveContact.id)
+      response.body.contacts.find(
+        (c: { id: string }) => c.id === inactiveContact.id
+      )
     ).toBeUndefined();
   });
 
@@ -141,7 +144,9 @@ describe("GET /contacts", () => {
 
     expect(response.body.contacts).toHaveLength(2);
     expect(
-      response.body.contacts.every((c: any) => c.nome.includes("João"))
+      response.body.contacts.every((c: { nome: string }) =>
+        c.nome.includes("João")
+      )
     ).toBe(true);
   });
 
@@ -234,7 +239,7 @@ describe("GET /contacts", () => {
     expect(response.body.contacts).toHaveLength(1);
     expect(response.body.contacts[0].id).toBe(contact1.id);
     expect(
-      response.body.contacts[0].telefones.some((t: any) =>
+      response.body.contacts[0].telefones.some((t: { numero: string }) =>
         t.numero.includes("11987")
       )
     ).toBe(true);
