@@ -46,12 +46,6 @@ docker-compose up -d
 # Se a imagem não subir de primeira, rode o comando novamente
 ```
 
-Para verificar se o container está em execução, rode:
-
-```bash
-docker ps
-```
-
 ### 5. Execute as Migrações
 
 ```bash
@@ -84,6 +78,49 @@ A API estará disponível em: `http://localhost:3333`
 # Interface visual do banco (Drizzle Studio)
 npm run db:studio
 ```
+
+## 📚 Documentação da API
+
+### Swagger UI
+
+Acesse a documentação em: `http://localhost:3333/docs`
+
+Voce pode mudar a UI para o Scalar se preferir, é só comentar as linhas 36, 37 e 38 do arquivo src/app e descomentar as linhas 40, 41 e 42.
+
+### Endpoints Principais
+
+#### Contatos
+
+- `POST /contacts` - Criar novo contato
+- `GET /contacts` - Listar contatos (com busca e paginação)
+- `GET /contacts/:id` - Buscar contato específico (com dados de clima)
+- `PUT /contacts/:id` - Atualizar contato
+- `DELETE /contacts/:id` - Remover contato (soft delete)
+
+### Exemplos de Uso
+
+### Arquivo de Requisições HTTP
+
+O projeto inclui um arquivo `requisicoes.http` com exemplos completos de todas as operações da API, incluindo casos de teste para validações e tratamento de erros.
+
+## 🧪 Testes
+
+### Executar Todos os Testes
+
+```bash
+# Testes de integração com cobertura
+npm test
+
+# Testes unitários
+npm run test:unit
+```
+
+### Estrutura de Testes
+
+- **Testes de Integração**: `/src/test/routes/` - Testam endpoints completos
+- **Testes Unitários**: `/src/test/unit/` - Testam funções isoladas
+- **Testes de Schema**: `/src/test/database/` - Validam estrutura do banco
+- **Mocks e Utilidades**: `/src/test/utils.ts` - Helpers para testes
 
 ## 🏗️ Arquitetura e Decisões Técnicas
 
@@ -194,49 +231,6 @@ telefones (
   contato_id UUID REFERENCES contatos(id) ON DELETE CASCADE
 )
 ```
-
-## 📚 Documentação da API
-
-### Swagger UI
-
-Acesse a documentação em: `http://localhost:3333/docs`
-
-Voce pode mudar a UI para o Scalar se preferir, é só comentar as linhas 36, 37 e 38 do arquivo src/app e descomentar as linhas 40, 41 e 42.
-
-### Endpoints Principais
-
-#### Contatos
-
-- `POST /contacts` - Criar novo contato
-- `GET /contacts` - Listar contatos (com busca e paginação)
-- `GET /contacts/:id` - Buscar contato específico (com dados de clima)
-- `PUT /contacts/:id` - Atualizar contato
-- `DELETE /contacts/:id` - Remover contato (soft delete)
-
-### Exemplos de Uso
-
-### Arquivo de Requisições HTTP
-
-O projeto inclui um arquivo `requisicoes.http` com exemplos completos de todas as operações da API, incluindo casos de teste para validações e tratamento de erros.
-
-## 🧪 Testes
-
-### Executar Todos os Testes
-
-```bash
-# Testes de integração com cobertura
-npm test
-
-# Testes unitários
-npm run test:unit
-```
-
-### Estrutura de Testes
-
-- **Testes de Integração**: `/src/test/routes/` - Testam endpoints completos
-- **Testes Unitários**: `/src/test/unit/` - Testam funções isoladas
-- **Testes de Schema**: `/src/test/database/` - Validam estrutura do banco
-- **Mocks e Utilidades**: `/src/test/utils.ts` - Helpers para testes
 
 ## 🛠️ Ferramentas de Desenvolvimento
 
