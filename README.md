@@ -1,4 +1,4 @@
-# 📞 Sistema de Gerenciamento de Contatos
+# 📞 Sistema de Gerenciamento de Contatos.
 
 > Nota: parte dos testes e dos comentários presentes neste projeto foram gerados com auxílio de IA.
 
