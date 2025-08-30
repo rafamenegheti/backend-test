@@ -1,5 +1,7 @@
 # 📞 Sistema de Gerenciamento de Contatos
 
+> Nota: parte dos testes e dos comentários presentes neste projeto foram gerados com auxílio de IA.
+
 Uma API REST robusta para gerenciamento de contatos, desenvolvida com Node.js, TypeScript, Fastify e PostgreSQL. O sistema oferece funcionalidades completas de CRUD (Create, Read, Update, Delete) para contatos e seus telefones associados, incluindo busca avançada e integração com API de clima.
 
 ## 🏗️ Arquitetura e Decisões Técnicas
@@ -22,14 +24,20 @@ src/
 ├── app.ts                      # Configuração principal do Fastify e providers
 ├── server.ts                   # Entry point da aplicação
 ├── controllers/                # Controllers (Camada C do MVC)
-│   └── contactController.ts    # Regras HTTP, validação, status codes
+│   └── contacts/               # Rotas de contatos (divididas por endpoint)
+│       ├── create.ts
+│       ├── list.ts
+│       ├── getOne.ts
+│       ├── update.ts
+│       ├── delete.ts
+│       └── index.ts            # Compose e registra todas as rotas de contatos
 ├── services/                   # Services (Regra de negócio)
 │   ├── contactService.ts       # Orquestra casos de uso
 │   └── weatherService.ts       # Integração externa (clima)
 ├── repositories/               # Repositories (Acesso a dados - Model)
 │   └── contactRepository.ts    # Drizzle ORM
 ├── routes/
-│   └── index.ts                # Container de DI (wiring)
+│   └── index.ts                # Container de DI (wiring): cria repo+services+controllers
 ├── database/
 │   ├── client.ts
 │   ├── schema.ts
@@ -256,7 +264,6 @@ O projeto inclui `docker-compose.yml` para facilitar o desenvolvimento local. Pa
 - [x] Testes unitários
 - [x] CI/CD ready
 - [x] Logs estruturados
-- [x] Type safety end-to-end
 
 ### ✅ Developer Experience
 
