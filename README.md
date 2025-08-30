@@ -46,6 +46,12 @@ docker-compose up -d
 # Se a imagem não subir de primeira, rode o comando novamente
 ```
 
+Para verificar se o container está em execução, rode:
+
+```bash
+docker ps
+```
+
 ### 5. Execute as Migrações
 
 ```bash
