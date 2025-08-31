@@ -15,6 +15,15 @@ export function buildDeleteContact(
           params: z.object({
             id: z.string().uuid("Invalid contact ID format"),
           }),
+          response: {
+            200: z.object({
+              success: z.literal(true),
+              message: z.string(),
+              contactId: z.uuid(),
+            }),
+            404: z.object({ error: z.string(), message: z.string() }),
+            500: z.object({ error: z.string(), message: z.string() }),
+          },
         },
       },
       async (request, reply) => {

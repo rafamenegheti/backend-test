@@ -15,6 +15,41 @@ export function buildGetOneContact(
           params: z.object({
             id: z.string().uuid("Invalid contact ID format"),
           }),
+          response: {
+            200: z.object({
+              contact: z.object({
+                id: z.uuid(),
+                nome: z.string(),
+                email: z.string(),
+                codigoZip: z.string(),
+                endereco: z.string(),
+                numero: z.string(),
+                bairro: z.string(),
+                cidade: z.string(),
+                estado: z.string(),
+                complemento: z.string().nullable().optional(),
+                ativo: z.boolean(),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+                telefones: z.array(
+                  z.object({ id: z.string().uuid(), numero: z.string() })
+                ),
+                weather: z.union([
+                  z.object({ error: z.string(), message: z.string() }),
+                  z.object({
+                    temp: z.number(),
+                    condition: z.string(),
+                    currently: z.string(),
+                    city: z.string(),
+                    suggestion: z.string(),
+                    condition_code: z.string(),
+                  }),
+                ]),
+              }),
+            }),
+            404: z.object({ error: z.string(), message: z.string() }),
+            500: z.object({ error: z.string(), message: z.string() }),
+          },
         },
       },
       async (request, reply) => {

@@ -18,6 +18,40 @@ export function buildListContacts(
             page: z.string().regex(/^\d+$/).transform(Number).optional(),
             limit: z.string().regex(/^\d+$/).transform(Number).optional(),
           }),
+          response: {
+            200: z.object({
+              contacts: z.array(
+                z.object({
+                  id: z.uuid(),
+                  nome: z.string(),
+                  email: z.string(),
+                  codigoZip: z.string(),
+                  endereco: z.string(),
+                  numero: z.string(),
+                  bairro: z.string(),
+                  cidade: z.string(),
+                  estado: z.string(),
+                  complemento: z.string().nullable().optional(),
+                  ativo: z.boolean(),
+                  createdAt: z.string(),
+                  updatedAt: z.string(),
+                  telefones: z.array(
+                    z.object({ id: z.string().uuid(), numero: z.string() })
+                  ),
+                })
+              ),
+              pagination: z.object({
+                currentPage: z.number(),
+                totalPages: z.number(),
+                totalItems: z.number(),
+                itemsPerPage: z.number(),
+                hasNextPage: z.boolean(),
+                hasPrevPage: z.boolean(),
+              }),
+            }),
+            400: z.object({ error: z.string(), message: z.string() }),
+            500: z.object({ error: z.string(), message: z.string() }),
+          },
         },
       },
       async (request, reply) => {

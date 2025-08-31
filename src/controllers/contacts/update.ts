@@ -47,6 +47,17 @@ export function buildUpdateContact(
               .array(z.uuid("ID do telefone deve ser um UUID válido"))
               .optional(),
           }),
+          response: {
+            200: z.object({
+              success: z.literal(true),
+              message: z.string(),
+              contactId: z.uuid(),
+            }),
+            400: z.object({ error: z.string(), message: z.string() }),
+            404: z.object({ error: z.string(), message: z.string() }),
+            409: z.object({ error: z.string(), message: z.string() }),
+            500: z.object({ error: z.string(), message: z.string() }),
+          },
         },
       },
       async (request, reply) => {
