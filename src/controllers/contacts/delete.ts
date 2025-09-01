@@ -13,7 +13,7 @@ export function buildDeleteContact(
           tags: ["Contact"],
           summary: "Soft delete a contact (sets ativo to false)",
           params: z.object({
-            id: z.string().uuid("Invalid contact ID format"),
+            id: z.uuid("Invalid contact ID format"),
           }),
           response: {
             200: z.object({
