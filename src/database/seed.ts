@@ -13,8 +13,8 @@ async function seed() {
         endereco: faker.location.streetAddress(),
         numero: faker.location.buildingNumber(),
         bairro: faker.location.street(),
-        cidade: faker.location.city(),
-        estado: faker.location.state(),
+        cidade: "Franca",
+        estado: "SP",
         complemento: faker.location.secondaryAddress(),
       },
       {
@@ -24,8 +24,8 @@ async function seed() {
         endereco: faker.location.streetAddress(),
         numero: faker.location.buildingNumber(),
         bairro: faker.location.street(),
-        cidade: faker.location.city(),
-        estado: faker.location.state(),
+        cidade: "São Paulo",
+        estado: "SP",
         complemento: faker.location.secondaryAddress(),
       },
       {
@@ -35,14 +35,14 @@ async function seed() {
         endereco: faker.location.streetAddress(),
         numero: faker.location.buildingNumber(),
         bairro: faker.location.street(),
-        cidade: faker.location.city(),
-        estado: faker.location.state(),
+        cidade: "Rio de Janeiro",
+        estado: "RJ",
         complemento: faker.location.secondaryAddress(),
       },
     ])
     .returning({ id: contatos.id });
 
-  const telefonesInsert = await db.insert(telefones).values([
+  await db.insert(telefones).values([
     {
       numero: faker.phone.number(),
       contatoId: contatosInsert[0].id,
