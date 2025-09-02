@@ -114,7 +114,6 @@ O projeto inclui um arquivo `requisicoes.http`(Funciona como um Postman, você p
 ### Executar Todos os Testes
 
 ```bash
-# Testes de integração com cobertura
 npm run test
 ```
 
