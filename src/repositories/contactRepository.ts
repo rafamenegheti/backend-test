@@ -1,6 +1,6 @@
 import { db } from "../database/client.ts";
 import { contatos, telefones } from "../database/schema.ts";
-import { and, eq, ilike, or, sql, SQL } from "drizzle-orm";
+import { and, eq, ilike, or, sql, SQL, inArray } from "drizzle-orm";
 
 export type ContactRow = typeof contatos.$inferSelect;
 type ContactInsert = typeof contatos.$inferInsert;
@@ -16,13 +16,22 @@ export type UpdateContactInput = Partial<ContactInsert> & {
 
 export interface ContactRepository {
   create(input: CreateContactInput): Promise<{ id: string }>;
-  findById(id: string): Promise<ContactRow | null>;
+  findById(
+    id: string
+  ): Promise<
+    (ContactRow & { telefones: Array<{ id: string; numero: string }> }) | null
+  >;
   list(params: {
     search?: string;
     ativo?: boolean;
     limit: number;
     offset: number;
-  }): Promise<{ items: ContactRow[]; totalItems: number }>;
+  }): Promise<{
+    items: (ContactRow & {
+      telefones: Array<{ id: string; numero: string }>;
+    })[];
+    totalItems: number;
+  }>;
   update(id: string, input: UpdateContactInput): Promise<boolean>;
   softDelete(id: string): Promise<boolean>;
   existsByEmail(email: string): Promise<boolean>;
@@ -51,29 +60,21 @@ export class DrizzleContactRepository implements ContactRepository {
     return { id: newContact.id };
   }
 
-  async findById(id: string): Promise<ContactRow | null> {
-    const rows = await db
-      .select({
-        id: contatos.id,
-        nome: contatos.nome,
-        email: contatos.email,
-        codigoZip: contatos.codigoZip,
-        endereco: contatos.endereco,
-        numero: contatos.numero,
-        bairro: contatos.bairro,
-        cidade: contatos.cidade,
-        estado: contatos.estado,
-        complemento: contatos.complemento,
-        ativo: contatos.ativo,
-        createdAt: contatos.createdAt,
-        updatedAt: contatos.updatedAt,
-      })
-      .from(contatos)
-      .where(eq(contatos.id, id))
-      .limit(1);
+  async findById(
+    id: string
+  ): Promise<
+    (ContactRow & { telefones: Array<{ id: string; numero: string }> }) | null
+  > {
+    const result = await db.query.contatos.findFirst({
+      where: eq(contatos.id, id),
+      with: { telefones: true },
+    });
 
-    if (rows.length === 0) return null;
-    return rows[0];
+    if (!result) return null;
+
+    return {
+      ...result,
+    };
   }
 
   async list(params: {
@@ -81,7 +82,12 @@ export class DrizzleContactRepository implements ContactRepository {
     ativo?: boolean;
     limit: number;
     offset: number;
-  }): Promise<{ items: ContactRow[]; totalItems: number }> {
+  }): Promise<{
+    items: (ContactRow & {
+      telefones: Array<{ id: string; numero: string }>;
+    })[];
+    totalItems: number;
+  }> {
     const { search, ativo, limit, offset } = params;
     const conditions: SQL<unknown>[] = [];
 
@@ -91,16 +97,6 @@ export class DrizzleContactRepository implements ContactRepository {
 
     if (search) {
       const searchPattern = `%${search}%`;
-
-      const contactsWithMatchingPhones = await db
-        .select({ contatoId: telefones.contatoId })
-        .from(telefones)
-        .where(ilike(telefones.numero, searchPattern));
-
-      const phoneMatchingIds = contactsWithMatchingPhones.map(
-        (p) => p.contatoId
-      );
-
       const contactSearchConditions = [
         ilike(contatos.nome, searchPattern),
         ilike(contatos.email, searchPattern),
@@ -113,39 +109,13 @@ export class DrizzleContactRepository implements ContactRepository {
 
       contactSearchConditions.push(ilike(contatos.complemento, searchPattern));
 
-      if (phoneMatchingIds.length > 0) {
-        contactSearchConditions.push(
-          sql`${contatos.id} IN (${sql.join(
-            phoneMatchingIds.map((id) => sql`${id}`),
-            sql`,`
-          )})`
-        );
-      }
+      contactSearchConditions.push(
+        sql`exists (select 1 from ${telefones} where ${telefones.contatoId} = ${contatos.id} and ${telefones.numero} ilike ${searchPattern})`
+      );
 
       const orCondition = or(...contactSearchConditions);
       if (orCondition) conditions.push(orCondition);
     }
-
-    const baseQuery = db
-      .select({
-        id: contatos.id,
-        nome: contatos.nome,
-        email: contatos.email,
-        codigoZip: contatos.codigoZip,
-        endereco: contatos.endereco,
-        numero: contatos.numero,
-        bairro: contatos.bairro,
-        cidade: contatos.cidade,
-        estado: contatos.estado,
-        complemento: contatos.complemento,
-        ativo: contatos.ativo,
-        createdAt: contatos.createdAt,
-        updatedAt: contatos.updatedAt,
-      })
-      .from(contatos);
-
-    const query =
-      conditions.length > 0 ? baseQuery.where(and(...conditions)) : baseQuery;
 
     const baseCountQuery = db
       .select({ count: sql`count(*)`.mapWith(Number) })
@@ -158,10 +128,33 @@ export class DrizzleContactRepository implements ContactRepository {
 
     const [{ count: totalItems }] = await countQuery;
 
-    const items = await query
+    // Fetch filtered IDs with the same conditions to preserve pagination
+    const idQuery = db
+      .select({ id: contatos.id })
+      .from(contatos)
       .orderBy(contatos.createdAt)
       .limit(limit)
       .offset(offset);
+    const filteredIds =
+      conditions.length > 0
+        ? await idQuery.where(and(...conditions))
+        : await idQuery;
+
+    if (filteredIds.length === 0) {
+      return { items: [], totalItems };
+    }
+
+    // Fetch items with nested phones
+    const items = await db.query.contatos.findMany({
+      with: {
+        telefones: true,
+      },
+      where: inArray(
+        contatos.id,
+        filteredIds.map((r) => r.id)
+      ),
+      orderBy: (c, { asc }) => [asc(c.createdAt)],
+    });
 
     return { items, totalItems };
   }

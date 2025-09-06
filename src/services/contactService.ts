@@ -5,9 +5,6 @@ import {
   type ContactRow,
 } from "../repositories/contactRepository.ts";
 import { WeatherService } from "./weatherService.ts";
-import { db } from "../database/client.ts";
-import { telefones } from "../database/schema.ts";
-import { sql } from "drizzle-orm";
 
 export type PhoneSummary = { id: string; numero: string };
 
@@ -73,39 +70,10 @@ export class ContactService {
       offset,
     });
 
-    const contactIds = items.map((c) => c.id);
-
-    const phones =
-      contactIds.length > 0
-        ? await db
-            .select({
-              id: telefones.id,
-              numero: telefones.numero,
-              contatoId: telefones.contatoId,
-            })
-            .from(telefones)
-            .where(
-              sql`${telefones.contatoId} IN (${sql.join(
-                contactIds.map((id) => sql`${id}`),
-                sql`,`
-              )})`
-            )
-        : [];
-
-    const phonesByContact = phones.reduce((acc, phone) => {
-      if (!acc[phone.contatoId])
-        acc[phone.contatoId] = [] as Array<{ id: string; numero: string }>;
-
-      acc[phone.contatoId].push({ id: phone.id, numero: phone.numero });
-
-      return acc;
-    }, {} as Record<string, Array<{ id: string; numero: string }>>);
-
     const contacts: ContactListItem[] = items.map((contact) => ({
       ...contact,
       createdAt: contact.createdAt.toISOString(),
       updatedAt: contact.updatedAt.toISOString(),
-      telefones: phonesByContact[contact.id] || [],
     }));
 
     const totalPages = Math.ceil(totalItems / limit);
@@ -133,11 +101,6 @@ export class ContactService {
       return { error: "CONTACT_NOT_FOUND", message: "Contato não encontrado" };
     }
 
-    const phones = await db
-      .select({ id: telefones.id, numero: telefones.numero })
-      .from(telefones)
-      .where(sql`${telefones.contatoId} = ${id}`);
-
     const weather = await this.weatherService.getWeatherData(
       contact.cidade,
       contact.estado
@@ -147,7 +110,6 @@ export class ContactService {
       ...contact,
       createdAt: contact.createdAt.toISOString(),
       updatedAt: contact.updatedAt.toISOString(),
-      telefones: phones,
       weather:
         "error" in weather
           ? { error: weather.error, message: weather.message }
